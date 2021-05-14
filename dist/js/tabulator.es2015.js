@@ -9808,7 +9808,8 @@ Accessor.prototype.transformRow = function (row, type) {
 	    rowComponent = row.getComponent();
 
 	//clone data object with deep copy to isolate internal data from returned result
-	var data = Tabulator.prototype.helpers.deepClone(row.data || {});
+	//var data = Tabulator.prototype.helpers.deepClone(row.data || {});
+	const data = row.data;
 
 	this.table.columnManager.traverse(function (column) {
 		var value, accessor, params, colCompnent;
