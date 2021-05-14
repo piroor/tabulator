@@ -9032,10 +9032,6 @@ Tabulator.prototype.helpers = {
 		};
 	},
 
-	shallowClone: function shallowClone(obj) {
-		return Array.isArray(obj) ? obj.slice(0) : Object.assign({}, obj);
-	},
-
 	deepClone: function deepClone(obj) {
 		var clone = Object.assign(Array.isArray(obj) ? [] : {}, obj);
 
@@ -9812,7 +9808,7 @@ Accessor.prototype.transformRow = function (row, type) {
 	    rowComponent = row.getComponent();
 
 	//clone data object with deep copy to isolate internal data from returned result
-	var data = Tabulator.prototype.helpers.shallowClone(row.data || {});
+	var data = Tabulator.prototype.helpers.deepClone(row.data || {});
 
 	this.table.columnManager.traverse(function (column) {
 		var value, accessor, params, colCompnent;
