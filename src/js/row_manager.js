@@ -12,6 +12,8 @@ var RowManager = function(table){
 	this.fixedHeight = false; //current rendering mode
 
 	this.rows = []; //hold row data objects
+	this.rowsByIndex = new Map();
+	this.rowsByData = new WeakMap();
 	this.activeRows = []; //rows currently available to on display in the table
 	this.activeRowsCount = 0; //count of active rows
 
@@ -177,7 +179,7 @@ RowManager.prototype.findRow = function(subject){
 		return false;
 	}else{
 		//subject should be treated as the index of the row
-		let match = self.rows.find(function(row){
+		let match = self.rowsByIndex.get(subject) || self.rows.find(function(row){
 			return row.data[self.table.options.index] == subject;
 		});
 
@@ -190,7 +192,23 @@ RowManager.prototype.findRow = function(subject){
 };
 
 
+RowManager.prototype.addRowIndex = function(row){
+	this.rowsByIndex.set(row.data[this.table.options.index], row);
+	this.rowsByData.set(row.data, row);
+};
+
+RowManager.prototype.deleteRowIndex = function(row){
+	this.rowsByIndex.delete(row.data[this.table.options.index]);
+	this.rowsByData.delete(row.data, row);
+};
+
+
 RowManager.prototype.getRowFromDataObject = function(data){
+	var rowFromIndex = this.rowsByData.get(data);
+	if(rowFromIndex && rowFromIndex.data == data){
+		return rowFromIndex;
+	}
+
 	var match = this.rows.find(function(row){
 		return row.data === data;
 	});
@@ -344,6 +362,7 @@ RowManager.prototype._setDataActual = function(data, renderInPosition){
 			if(def && typeof def === "object"){
 				var row = new Row(def, self);
 				self.rows.push(row);
+				self.addRowIndex(row);
 			}else{
 				console.warn("Data Loading Warning - Invalid row data detected and ignored, expecting object but received:", def);
 			}
@@ -386,6 +405,7 @@ RowManager.prototype.deleteRow = function(row, blockRedraw){
 
 	if(allIndex > -1){
 		this.rows.splice(allIndex, 1);
+		this.deleteRowIndex(row);
 	}
 
 	this.setActiveRows(this.activeRows);
@@ -567,6 +587,7 @@ RowManager.prototype.addRowActual = function(data, pos, index, blockRedraw){
 		}
 
 		this.rows.splice((top ? allIndex : allIndex + 1), 0, row);
+		this.addRowIndex(row);
 
 	}else{
 
@@ -578,6 +599,7 @@ RowManager.prototype.addRowActual = function(data, pos, index, blockRedraw){
 
 			this.activeRows.unshift(row);
 			this.rows.unshift(row);
+			this.addRowIndex(row);
 		}else{
 			this.displayRowIterator(function(rows){
 				rows.push(row);
@@ -585,6 +607,7 @@ RowManager.prototype.addRowActual = function(data, pos, index, blockRedraw){
 
 			this.activeRows.push(row);
 			this.rows.push(row);
+			this.addRowIndex(row);
 		}
 	}
 
