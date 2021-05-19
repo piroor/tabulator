@@ -59,11 +59,14 @@ Accessor.prototype.lookupAccessor = function (value) {
 
 //apply accessor to row
 Accessor.prototype.transformRow = function (row, type) {
+	var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+	    noClone = _ref.noClone;
+
 	var key = "accessor" + (type.charAt(0).toUpperCase() + type.slice(1)),
 	    rowComponent = row.getComponent();
 
 	//clone data object with deep copy to isolate internal data from returned result
-	var data = Tabulator.prototype.helpers.deepClone(row.data || {});
+	var data = noClone ? row.data : Tabulator.prototype.helpers.deepClone(row.data || {});
 
 	this.table.columnManager.traverse(function (column) {
 		var value, accessor, params, colCompnent;
