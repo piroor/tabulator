@@ -663,7 +663,7 @@ Row.prototype.updateData = function(updatedData){
 Row.prototype.getData = function(transform){
 	if(transform){
 		if(this.table.modExists("accessor")){
-			return this.table.modules.accessor.transformRow(this, transform);
+			return this.table.modules.accessor.transformRow(this, transform, { noClone: this.table.options.dataIsolated });
 		}
 	}
 
