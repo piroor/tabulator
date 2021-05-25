@@ -19262,6 +19262,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		var self = this;
 
 		self.table.rowManager.getDisplayRows().forEach(function (row) {
+			if (!row.modules.moveRow) {
+				return;
+			}
 			if ((row.type === "row" || row.type === "group") && row.modules.moveRow.mousemove) {
 				row.getElement().addEventListener("mousemove", row.modules.moveRow.mousemove);
 			}
@@ -19272,6 +19275,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		var self = this;
 
 		self.table.rowManager.getDisplayRows().forEach(function (row) {
+			if (!row.modules.moveRow) {
+				return;
+			}
 			if ((row.type === "row" || row.type === "group") && row.modules.moveRow.mousemove) {
 				row.getElement().removeEventListener("mousemove", row.modules.moveRow.mousemove);
 			}

@@ -253,6 +253,9 @@ MoveRows.prototype._bindMouseMove = function () {
 	var self = this;
 
 	self.table.rowManager.getDisplayRows().forEach(function (row) {
+		if (!row.modules.moveRow) {
+			return;
+		}
 		if ((row.type === "row" || row.type === "group") && row.modules.moveRow.mousemove) {
 			row.getElement().addEventListener("mousemove", row.modules.moveRow.mousemove);
 		}
@@ -263,6 +266,9 @@ MoveRows.prototype._unbindMouseMove = function () {
 	var self = this;
 
 	self.table.rowManager.getDisplayRows().forEach(function (row) {
+		if (!row.modules.moveRow) {
+			return;
+		}
 		if ((row.type === "row" || row.type === "group") && row.modules.moveRow.mousemove) {
 			row.getElement().removeEventListener("mousemove", row.modules.moveRow.mousemove);
 		}
